@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LeveL_Manager : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class LeveL_Manager : MonoBehaviour
 
     private Dictionary<int, Material> itemMaterial = new Dictionary<int, Material>();
 
+    public UnityEvent whenPlayerWins;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +44,7 @@ public class LeveL_Manager : MonoBehaviour
                 item.GetComponent<Renderer>().material = defaultMaterial;
                 items[index] = item.GetComponent<ItemBehavior>(); // il faut s'assurer que le Prefab ait un ItemBehavior sinon ca ne marchera pas
 
-                items[index].id = index; // id --> devient l'index qu'on pourra ensuite référencier
+                items[index].id = index; // id --> devient l'index qu'on pourra ensuite rï¿½fï¿½rencier
                 items[index].manager = this;
 
                 index++;
@@ -60,7 +63,7 @@ public class LeveL_Manager : MonoBehaviour
             possibilities.Add(i);
         }
 
-        for (int i = 0; i < materials.Length; i++) // éviter le foreach pour les jv
+        for (int i = 0; i < materials.Length; i++) // ï¿½viter le foreach pour les jv
         {
             if (possibilities.Count < 2) break;
             int idPos = Random.Range(0, possibilities.Count);
@@ -86,7 +89,13 @@ public class LeveL_Manager : MonoBehaviour
         ResetMaterial(id1);
         ResetMaterial(id2);
         resetOnGoing = false;
+    }
 
+    private IEnumerator Win()
+    {
+        yield return new WaitForSeconds(timeBeforeReset);
+        whenPlayerWins?.Invoke();
+        // if(whenplayerWins != null) = Ã©quivalent au point d'interrogation
     }
 
     public void RevealMaterial(int id)
@@ -113,6 +122,11 @@ public class LeveL_Manager : MonoBehaviour
             {
                 matches.Add(selected[0]);
                 matches.Add(selected[1]);
+
+                if(matches.Count >= row * col)
+                {
+                    StartCoroutine(Win());
+                }
             }
             else
             {
