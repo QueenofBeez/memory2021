@@ -9,12 +9,12 @@ public class ItemBehavior : MonoBehaviour
     public LeveL_Manager manager;
 
     public bool mouseOver = false;
-
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -22,8 +22,8 @@ public class ItemBehavior : MonoBehaviour
     {
         if(Input.GetMouseButtonUp(0) && mouseOver)
         {
-            // Debug.Log($"Click: {id}"); pour avoir les couleurs dès le début
-            manager.RevealMaterial(id); // pour révéler les couleurs quand on leur click dessus
+            // Debug.Log($"Click: {id}"); pour avoir les couleurs dï¿½s le dï¿½but
+            manager.RevealMaterial(id); // pour rï¿½vï¿½ler les couleurs quand on leur click dessus
         }
     }
 

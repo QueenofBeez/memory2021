@@ -6,8 +6,10 @@ using UnityEngine.Events;
 public class LeveL_Manager : MonoBehaviour
 {
 
-    public int row = 3;
-    public int col = 4;
+    private float timer = 0;
+
+    private int row;
+    private int col;
 
     public float gapRow = 1.5f;
     public float gapCol = 1.5f;
@@ -33,8 +35,12 @@ public class LeveL_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        row = PlayerPrefs.GetInt("row", 3);
+        col = PlayerPrefs.GetInt("col", 4);
+
         items = new ItemBehavior[row * col];
         int index = 0;
+
         for (int x = 0; x < col; x++)
         {
             for (int z = 0; z < row; z++)
@@ -52,7 +58,6 @@ public class LeveL_Manager : MonoBehaviour
         }
 
         GiveMaterials();
-
     }
 
     private void GiveMaterials()
@@ -116,15 +121,21 @@ public class LeveL_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
+        // timer += Time.unscaledTime;
+
         if (selected.Count == 2)
         {
             if (itemMaterial[selected[0]] == itemMaterial[selected[1]])
             {
                 matches.Add(selected[0]);
                 matches.Add(selected[1]);
+                //items[selected[0]].HasBeenMatched();
+                //items[selected[1]].HasBeenMatched();
 
-                if(matches.Count >= row * col)
+                if (matches.Count >= row * col)
                 {
+                    PlayerPrefs.SetFloat("timer", timer);
                     StartCoroutine(Win());
                 }
             }
